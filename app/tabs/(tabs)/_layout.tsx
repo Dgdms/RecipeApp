@@ -14,33 +14,26 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
+
         headerShown: useClientOnlyValue(false, true),
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="overview"
         options={{
-          title: "Expo V3",
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          title: "Rezepte",
+          tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+        }}
+      />
+  
+      <Tabs.Screen
+        name="addRecipe"
+        options={{
+          title: "",
+          tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
         }}
       />
 
-      <Tabs.Screen
-        name="tab1"
-        options={{
-          title: "Tab 1",
-          tabBarIcon: ({ color }) => <TabBarIcon name="star-o" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="tab2"
-        options={{
-          title: "Tab 2",
-          tabBarIcon: ({ color }) => <TabBarIcon name="star-o" color={color} />,
-        }}
-      />
     </Tabs>
   );
 }

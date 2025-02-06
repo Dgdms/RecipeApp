@@ -1,19 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import NumberGridModal from '@/components/Overview/NumberGridModal';
 import { router } from 'expo-router';
-import NewRecipeModal from '@/components/Overview/NewRecipeModal'; // Neue Modal-Komponente importieren
 import calculateIngredientsForRecipe from '@/helpers/helper'; 
 import RecipeGrid from '@/components/Overview/RecipeGrid';
+import { loadRecipes, saveRecipes } from '@/services/recipe-service';
+import recipes from '@/data/recpies';
 
-export default function Index() {
+export default function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false); // Modal-Sichtbarkeit
   const [pressedRecipe, setPressedRecipe] = useState<string>('');
-  const [recipeButtonData, setRecipeButtonData] = useState([
-    { name: 'Pizzateig', icon: '', color: 'grey' },
-    { name: 'Pfannkuchen', icon: 'cake', color: 'grey' },
-  ]);
+  const [savedRecipes, setSavedRecipes] = useState([]);
+  const [isNewRecipeModalOpen, setIsNewRecipeModalOpen] = useState(false); 
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      const loadedRecipes = await loadRecipes(); 
+      if (loadedRecipes) {
+        setSavedRecipes(loadedRecipes);
+      } else {
+        await saveRecipes(recipes);
+        setSavedRecipes(recipes);
+      }
+    };
+
+    fetchRecipes();
+  }, []);
 
   const handleRecipePressed = (recipe: any) => {
     setPressedRecipe(recipe.name);
@@ -24,38 +36,21 @@ export default function Index() {
     setIsOpen(false);
     const recipe = calculateIngredientsForRecipe(pressedRecipe, value);
     router.push({
-      pathname: '(main)/(tabs)/home/recipeScreen',
+      pathname: '/tabs/(tabs)/overview/recipeOverview',
       params: { recipe: JSON.stringify(recipe) },
     });
   };
 
-  // Funktion zum Hinzufügen eines neuen Rezepts
-  const addNewRecipe = (name: string, icon: string) => {
-    const newRecipe = {
-      name: name,
-      icon: icon,
-      color: 'grey', // Standardfarbe
-    };
-
-    setRecipeButtonData((prevData) => [...prevData, newRecipe]); // Rezept zu Daten hinzufügen
-    setIsModalVisible(false); // Modal schließen
-  };
 
   return (
     <View style={{ flex: 1 }}>
-      <RecipeGrid onPress={handleRecipePressed} />
+      <RecipeGrid onPress={handleRecipePressed} recipes={savedRecipes} />
       <NumberGridModal
         visible={isOpen}
         onClose={() => setIsOpen(false)}
         pressedValue={(value: number) => handleRecipeCalc(value)}
       />
 
-      {/* NewRecipeModal anzeigen */}
-      <NewRecipeModal
-        visible={isModalVisible}
-        onClose={() => setIsModalVisible(false)} // Modal schließen
-        onSave={addNewRecipe} // Rezept speichern
-      />
     </View>
   );
 }
@@ -76,5 +71,15 @@ const styles = StyleSheet.create({
   fabText: {
     color: 'white',
     fontSize: 36,
+  },
+  modalContainer: {
+    position: 'absolute',
+    top: '30%',
+    left: '10%',
+    right: '10%',
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 10,
   },
 });

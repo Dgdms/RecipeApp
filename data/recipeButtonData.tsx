@@ -1,7 +1,14 @@
   const recipeButtonData = [
-    { name: 'Pizzateig', icon: '', color: 'grey' },
-
-    { name: 'Pfannkuchen', icon: 'cake', color: 'grey' }
+    {
+      name: 'Pizzateig',
+      image: './assets/images/recipe.png',
+      description: 'Ein einfacher Pizzateig für deine Lieblingspizza!',
+    },
+    {
+      name: 'Pfannkuchen',
+      image: './assets/images/recipe.png',
+      description: 'Leckere, fluffige Pfannkuchen für jedes Frühstück.',
+    },
   ];
 
   export default recipeButtonData
