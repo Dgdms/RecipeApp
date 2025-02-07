@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import NumberGridModal from '@/components/Overview/NumberGridModal';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import calculateIngredientsForRecipe from '@/helpers/helper'; 
 import RecipeGrid from '@/components/Overview/RecipeGrid';
 import { deleteRecipe, loadRecipeButtons, loadRecipes, saveRecipeButtons, saveRecipes } from '@/services/recipe-service';
@@ -13,34 +13,41 @@ export default function Home() {
   const [pressedRecipe, setPressedRecipe] = useState<string>('');
   const [savedRecipes, setSavedRecipes] = useState([]);
 
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      const loadedRecipes = await loadRecipes(); 
-      if (loadedRecipes) {
-        setSavedRecipes(loadedRecipes);
-      } else {
-        await saveRecipes(recipes);
-        setSavedRecipes(recipes);
-      }
-    };
-
-    const fetchRecipeButtons = async () => {
-      const loadedRecipeButtons = await loadRecipeButtons(); 
-      if (loadedRecipeButtons) {
-      } else {
-        await saveRecipeButtons(recipeButtonData);
-      }
-    };
-
-    const handleDelete = async (recipeName: string) => {
-      await deleteRecipe(recipeName); // Rezept aus AsyncStorage löschen
-      fetchRecipes(); // Danach sofort die Liste aktualisieren
-    };
-    
-    fetchRecipes();
-    fetchRecipeButtons();
-
-  }, []);
+  
+  
+  useFocusEffect(
+    useCallback(() => {
+      const fetchRecipes = async () => {
+        const loadedRecipes = await loadRecipes();
+        if (loadedRecipes) {
+          setSavedRecipes(loadedRecipes);
+        } else {
+          await saveRecipes(recipes);
+          setSavedRecipes(recipes);
+        }
+      };
+  
+      const fetchRecipeButtons = async () => {
+        const loadedRecipeButtons = await loadRecipeButtons();
+        if (!loadedRecipeButtons) {
+          await saveRecipeButtons(recipeButtonData);
+        }
+      };
+  
+      const handleDelete = async (recipeName: string) => {
+        await deleteRecipe(recipeName);
+        fetchRecipes();
+      };
+  
+      fetchRecipes();
+      fetchRecipeButtons();
+  
+      return () => {
+        // Cleanup falls notwendig (z. B. Event-Listener entfernen)
+      };
+    }, [])
+  );
+  
 
   const handleRecipePressed = (recipe: any) => {
     setPressedRecipe(recipe.name);
