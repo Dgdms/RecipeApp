@@ -1,27 +1,45 @@
-import React from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, ScrollView } from 'react-native';
 import RecipeCard from '../recipeCard';
-import recipes from '@/data/recipeButtonData'; 
-import { VStack } from '../ui/vstack';
+import { View } from '../Themed';
+import { loadRecipeButtons } from '@/services/recipe-service';
 type RecipeGridProps = {
-  onPress: (recipes: any) => void;
+  onPress: (recipe: any) => void;
+  onLongPress: (name: any) => void;
+
 };
 
-const RecipeGrid: React.FC<RecipeGridProps> = ({ onPress }) => {
-    return (
-      <ScrollView>
+const RecipeGrid: React.FC<RecipeGridProps> = ({ onPress}) => {
+  const [recipes, setRecipes] = useState<any[]>([]);
+
+  // Lade Rezept-Buttons aus AsyncStorage
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      const loadedRecipes = await loadRecipeButtons();
+      if (loadedRecipes) {
+        setRecipes(loadedRecipes);
+      }
+    };
+    fetchRecipes();
+  }, []);
+
+  return (
+    <ScrollView>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
         {recipes.map((recipe, index) => (
-          <VStack key={index}>
-          <TouchableOpacity onPress={() => onPress(recipe)} key={index}>
-          <RecipeCard key={index} recipe={recipe} />
-          </TouchableOpacity>
-          </VStack>
+          <View
+            key={index}
+            style={{
+              width: '50%',
+              marginBottom: 10,
+            }}
+          >
+            <RecipeCard recipe={recipe} onPress={() => onPress(recipe)} />
+          </View>
         ))}
-      </ScrollView>
-    );
+      </View>
+    </ScrollView>
+  );
 };
- 
-
 
 export default RecipeGrid;

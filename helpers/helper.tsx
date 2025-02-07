@@ -1,7 +1,9 @@
-import recipes from "../data/recpies";
+import { loadRecipes } from '@/services/recipe-service';
+export const calculateIngredientsForRecipe = async (recipeName: string, numberOfPeople: number) => {
+  const recipes = await loadRecipes();  // Lade die gespeicherten Rezepte
 
-export const calculateIngredientsForRecipe = (recipeName: string, numberOfPeople: number) => {
-  const recipe = recipes.find(r => r.name === recipeName);
+  const recipe = recipes.find(r => r.name === recipeName);  // Finde das Rezept
+
   if (!recipe) {
     console.log(`Rezept ${recipeName} nicht gefunden`);
     return [];
@@ -17,9 +19,10 @@ export const calculateIngredientsForRecipe = (recipeName: string, numberOfPeople
         : Math.round(ingredient.amount * factor * 10) / 10,
   }));
 
-  return {
-    ...recipe,
+   const result = { ...recipe,
     ingredients: updatedIngredients,
   };
+  return result
 };
-export default calculateIngredientsForRecipe
+
+export default calculateIngredientsForRecipe;

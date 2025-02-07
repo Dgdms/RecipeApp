@@ -15,7 +15,7 @@ type Recipe = {
 
 export default function RecipeScreen() {
   const route = useRoute();
-  const { recipe } = route.params as { recipe: string };
+  const { recipe } = route.params as { recipe: any };
 
 
   let parsedRecipe: Recipe;

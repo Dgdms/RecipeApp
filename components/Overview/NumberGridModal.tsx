@@ -22,8 +22,8 @@ const NumberGridModal: React.FC<NumberGridModalProps> = ({ visible, onClose, pre
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContent}>
                     {/* Schließen-Button */}
-                    <TouchableOpacity style={styles.closeButton} onPress={onClose} >
-                        <Icon name="close" size={30} color="#000" />
+                    <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+                        <Icon name="close" size={30} color="#fff" />
                     </TouchableOpacity>
 
                     {/* Frage */}
@@ -37,7 +37,7 @@ const NumberGridModal: React.FC<NumberGridModalProps> = ({ visible, onClose, pre
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 style={styles.numberButton}
-                                onPress={() => {pressedValue(item), onClose}} // Schließt das Modal, wenn eine Zahl gedrückt wird
+                                onPress={() => { pressedValue(item); onClose(); }}
                             >
                                 <Text style={styles.numberText}>{item}</Text>
                             </TouchableOpacity>
@@ -55,39 +55,51 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.8)', // Dimmter, halbtransparenter Hintergrund  },
+        backgroundColor: 'rgba(0, 0, 0, 0.6)', // Dimmter Hintergrund für besseren Fokus
     },
     modalContent: {
         width: '80%', // Breite des Modals
         backgroundColor: '#fff',
-        borderRadius: 10,
-        padding: 20,
-        alignItems: 'center', // Zentriert den Inhalt
+        borderRadius: 20,
+        padding: 30,
+        alignItems: 'center',
         position: 'relative', // Damit das Schließen-Icon oben rechts positioniert werden kann
+        shadowColor: '#000', // Schatten für visuelle Tiefe
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
     },
     closeButton: {
-        paddingLeft: 5,
         position: 'absolute',
         top: 10,
         right: 10,
+        backgroundColor: 'rgba(0, 0, 0, 0.3)', // Schließen-Button Hintergrund
+        padding: 8,
+        borderRadius: 50,
     },
     questionText: {
-        fontSize: 20,
+        fontSize: 24,
         marginBottom: 20,
-        marginTop: 15,
-        fontWeight: 'bold',
+        fontWeight: '600',
+        color: '#333',
     },
     numberButton: {
-        width: 70,
-        height: 70,
+        width: 60,
+        height: 60,
         margin: 10,
-        borderRadius: 5,
+        borderRadius: 15,
+        backgroundColor: '#41292c', // Grüner Hintergrund für Buttons
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 2,
+        borderColor: '#2f2d2e',
+        elevation: 3, // Schatten-Effekt für den Button
+        transform: [{ scale: 1 }],
     },
     numberText: {
-        fontSize: 24,
+        fontSize: 30,
+        fontWeight: '700',
+        color: '#fff',
     },
     gridContainer: {
         justifyContent: 'center',

@@ -4,14 +4,14 @@ import NumberGridModal from '@/components/Overview/NumberGridModal';
 import { router } from 'expo-router';
 import calculateIngredientsForRecipe from '@/helpers/helper'; 
 import RecipeGrid from '@/components/Overview/RecipeGrid';
-import { loadRecipes, saveRecipes } from '@/services/recipe-service';
+import { deleteRecipe, loadRecipeButtons, loadRecipes, saveRecipeButtons, saveRecipes } from '@/services/recipe-service';
 import recipes from '@/data/recpies';
+import recipeButtonData from '@/data/recipeButtonData';
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [pressedRecipe, setPressedRecipe] = useState<string>('');
   const [savedRecipes, setSavedRecipes] = useState([]);
-  const [isNewRecipeModalOpen, setIsNewRecipeModalOpen] = useState(false); 
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -24,7 +24,22 @@ export default function Home() {
       }
     };
 
+    const fetchRecipeButtons = async () => {
+      const loadedRecipeButtons = await loadRecipeButtons(); 
+      if (loadedRecipeButtons) {
+      } else {
+        await saveRecipeButtons(recipeButtonData);
+      }
+    };
+
+    const handleDelete = async (recipeName: string) => {
+      await deleteRecipe(recipeName); // Rezept aus AsyncStorage löschen
+      fetchRecipes(); // Danach sofort die Liste aktualisieren
+    };
+    
     fetchRecipes();
+    fetchRecipeButtons();
+
   }, []);
 
   const handleRecipePressed = (recipe: any) => {
@@ -32,15 +47,20 @@ export default function Home() {
     setIsOpen(true);
   };
 
-  const handleRecipeCalc = (value: number) => {
+  const handleRecipeCalc = async (value: number) => {
     setIsOpen(false);
-    const recipe = calculateIngredientsForRecipe(pressedRecipe, value);
+  
+    const recipe = await calculateIngredientsForRecipe(pressedRecipe, value);
+  
     router.push({
       pathname: '/tabs/(tabs)/overview/recipeOverview',
-      params: { recipe: JSON.stringify(recipe) },
+      params: { recipe: JSON.stringify(recipe) },  
     });
   };
 
+  function handleDelete(name: any): void {
+    throw new Error('Function not implemented.');
+  }
 
   return (
     <View style={{ flex: 1 }}>
