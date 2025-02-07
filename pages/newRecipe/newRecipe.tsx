@@ -88,7 +88,6 @@ const NewRecipe = () => {
         await saveRecipeButtons([...recipeButtons, newRecipeButton]);
         setIngredients([{ name: '', quantity: '', unit: '' }]);          
             router.push({
-            params: { updatedRecipes: 'true' },
               pathname: '/tabs/(tabs)/overview',
             });
     }

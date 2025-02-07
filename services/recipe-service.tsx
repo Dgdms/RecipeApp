@@ -34,6 +34,7 @@ export const saveRecipeButtons = async (recipes: any[]) => {
 export const loadRecipeButtons = async () => {
   try {
     const storedRecipes = await AsyncStorage.getItem('@recipeButtons');
+    
     if (storedRecipes !== null) {
       return JSON.parse(storedRecipes);
     }

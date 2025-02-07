@@ -5,10 +5,9 @@ import { View } from './Themed';
 import { Ionicons } from '@expo/vector-icons'; // Importiere Icon
 import { deleteRecipe } from '@/services/recipe-service';
 
-const RecipeCard = ({ recipe, onPress = () => {}, onLongPress=(name: string)=> {} }) => {
+const RecipeCard = ({ recipe, onPress = () => {}}) => {
   // Erkenne den aktuellen Farbschema-Modus (Light oder Dark)
   const colorScheme = useColorScheme();
-
   // Definiere die Farben basierend auf dem Farbschema
   const backgroundColor = colorScheme === 'dark' ? '#333333' : '#ffffff'; // Dark Mode oder Light Mode
   const textColor = colorScheme === 'dark' ? '#f5f5f5' : '#1f2937'; // Textfarbe für Dark und Light Mode
@@ -58,9 +57,10 @@ const RecipeCard = ({ recipe, onPress = () => {}, onLongPress=(name: string)=> {
         </Text>
 
         {/* Description */}
+       {recipe.desrip &&
         <Text style={{ color: descriptionColor, marginTop: 8, fontSize: 12 }} numberOfLines={2}>
-          {recipe.description || "No description available."}
-        </Text>
+          {recipe.description }
+        </Text>}
 
         {/* Wenn lange gedrückt wurde, zeige das rote Kreuz */}
         {isLongPressed && (

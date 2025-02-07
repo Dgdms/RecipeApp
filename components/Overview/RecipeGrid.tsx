@@ -1,27 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView, Pressable } from 'react-native';
 import RecipeCard from '../recipeCard';
 import { View } from '../Themed';
-import { loadRecipeButtons } from '@/services/recipe-service';
 type RecipeGridProps = {
   onPress: (recipe: any) => void;
-  onLongPress: (name: any) => void;
-
+  recipes: any
 };
 
-const RecipeGrid: React.FC<RecipeGridProps> = ({ onPress}) => {
-  const [recipes, setRecipes] = useState<any[]>([]);
+const RecipeGrid: React.FC<RecipeGridProps> = ({ onPress, recipes, handleLongPress }) => {
 
-  // Lade Rezept-Buttons aus AsyncStorage
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      const loadedRecipes = await loadRecipeButtons();
-      if (loadedRecipes) {
-        setRecipes(loadedRecipes);
-      }
-    };
-    fetchRecipes();
-  }, []);
+
 
   return (
     <ScrollView>
@@ -34,7 +22,7 @@ const RecipeGrid: React.FC<RecipeGridProps> = ({ onPress}) => {
               marginBottom: 10,
             }}
           >
-            <RecipeCard recipe={recipe} onPress={() => onPress(recipe)} />
+              <RecipeCard recipe={recipe} onPress={() => onPress(recipe)} />
           </View>
         ))}
       </View>

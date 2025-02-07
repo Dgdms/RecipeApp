@@ -12,8 +12,6 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [pressedRecipe, setPressedRecipe] = useState<string>('');
   const [savedRecipes, setSavedRecipes] = useState([]);
-
-  
   
   useFocusEffect(
     useCallback(() => {
@@ -33,22 +31,13 @@ export default function Home() {
           await saveRecipeButtons(recipeButtonData);
         }
       };
-  
-      const handleDelete = async (recipeName: string) => {
-        await deleteRecipe(recipeName);
-        fetchRecipes();
-      };
+ 
   
       fetchRecipes();
       fetchRecipeButtons();
-  
-      return () => {
-        // Cleanup falls notwendig (z. B. Event-Listener entfernen)
-      };
     }, [])
   );
   
-
   const handleRecipePressed = (recipe: any) => {
     setPressedRecipe(recipe.name);
     setIsOpen(true);
@@ -65,9 +54,7 @@ export default function Home() {
     });
   };
 
-  function handleDelete(name: any): void {
-    throw new Error('Function not implemented.');
-  }
+  
 
   return (
     <View style={{ flex: 1 }}>
