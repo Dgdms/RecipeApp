@@ -27,7 +27,7 @@ export default function TabLayout() {
       />
   
       <Tabs.Screen
-        name="addRecipe"
+        name="newRecipe"
         options={{
           title: "",
           tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,

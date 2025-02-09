@@ -1,4 +1,4 @@
-package com.dgdms.testexpo
+package com.dgdms.recipeApp
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build
